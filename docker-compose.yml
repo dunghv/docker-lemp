@@ -1,7 +1,7 @@
 db:
   image: dylanlindgren/docker-mariadb
   volumes:
-    - /Users/dunghv/Code/myapp/mariadb:/data/mariadb
+    - ~Code/myapp/mariadb:/data/mariadb
   ports:
     - "3306:3306"
   privileged: true
@@ -9,7 +9,7 @@ db:
 data:
   image: docker-laravel-data
   volumes:
-    - /Users/dunghv/Code/myapp:/data
+    - ~/Code/myapp:/data
   privileged: true
 
 php:
