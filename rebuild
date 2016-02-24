@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $1 ]
+then
+    docker build -t docker-$1 ./docker-$1
+else
+    docker build -t docker-php7cli ./docker-php7cli
+    docker build -t docker-laravel-artisan ./docker-laravel-artisan
+    docker build -t docker-laravel-bower ./docker-laravel-bower
+    docker build -t docker-laravel-composer ./docker-laravel-composer
+    docker build -t docker-laravel-data ./docker-laravel-data
+    docker build -t docker-laravel-nginx ./docker-laravel-nginx
+    docker build -t docker-laravel-php7fpm ./docker-laravel-php7fpm
+    docker build -t docker-laravel-phpunit ./docker-laravel-phpunit
+fi
