@@ -1,4 +1,4 @@
-FROM laravel-phpcli:latest
+FROM dunghv/laravel-phpcli:latest
 
 MAINTAINER "Hoang Viet Dung" <dung.hvd@gmail.com>
 
