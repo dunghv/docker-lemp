@@ -1,12 +1,11 @@
-FROM docker-php7cli:latest
+FROM docker-phpcli:latest
 
 MAINTAINER "Hoang Viet Dzung" <dung.hvd@gmail.com>
 
 WORKDIR /tmp
 
 RUN apt-get update -y && \
-    apt-get install -y wget libmcrypt-dev && \
-    docker-php-ext-install mcrypt && \
+    apt-get install -y wget php5-mcrypt && \
     wget https://phar.phpunit.de/phpunit.phar && \
     apt-get remove -y wget && \
     rm -rf /var/lib/apt/lists/* && \

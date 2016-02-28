@@ -1,48 +1,76 @@
-db:
-  image: dylanlindgren/docker-mariadb
-  volumes:
-    - ~Code/myapp/mariadb:/data/mariadb
-  ports:
-    - "3306:3306"
-  privileged: true
+version: '2'
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    privileged: true
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
 
-data:
-  image: docker-laravel-data
-  volumes:
-    - ~/Code/myapp:/data
-  privileged: true
+  data:
+    build: ./docker-laravel-data
+    image: docker-laravel-data
+    volumes:
+      - ~/Code/myapp:/data:rw
+    privileged: true
 
-php:
-  image: docker-laravel-php7fpm
-  volumes_from:
-    - data
-  links:
-    - db:db
-  privileged: true
+  phpfpm:
+    build: ./docker-laravel-phpfpm
+    image: docker-laravel-phpfpm
+    volumes_from:
+      - data
+    links:
+      - db
+    privileged: true
+    environment:
+      XDEBUG_REMOTE_HOST: 192.168.3.104
+      XDEBUG_IDEKEY: PHPSTORM
 
-web:
-  image: docker-laravel-nginx
-  volumes_from:
-    - data
-  links:
-    - php:fpm
-  ports:
-    - "80:80"
-  privileged: true
+  web:
+    build: ./docker-laravel-nginx
+    image: docker-laravel-nginx
+    volumes_from:
+      - data
+    links:
+      - phpfpm
+    ports:
+      - "80:80"
+    privileged: true
+    depends_on:
+      - db
+      - phpfpm
 
-composer:
-  image: docker-laravel-composer
-  volumes_from:
-    - data
+  composer:
+    build: ./docker-laravel-composer
+    image: docker-laravel-composer
+    volumes_from:
+      - data
 
-artisan:
-  image: docker-laravel-artisan
-  volumes_from:
-    - data
-  links:
-    - db:db
+  phpcli:
+    build: ./docker-phpcli
+    image: docker-phpcli
 
-bower:
-  image: docker-laravel-bower
-  volumes_from:
-    - data
+  artisan:
+    build: ./docker-laravel-artisan
+    image: docker-laravel-artisan
+    volumes_from:
+      - data
+    links:
+      - db
+    depends_on:
+      - phpcli
+
+  bower:
+    build: ./docker-laravel-bower
+    image: docker-laravel-bower
+    volumes_from:
+      - data
+
+  phpunit:
+    build: ./docker-laravel-phpunit
+    image: docker-laravel-phpunit
+    volumes_from:
+      - data
+    depends_on:
+      - phpcli
