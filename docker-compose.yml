@@ -9,15 +9,15 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
 
   data:
-    build: ./docker-laravel-data
-    image: docker-laravel-data
+    build: ./laravel-data
+    image: laravel-data
     volumes:
       - ~/Code/myapp:/data:rw
     privileged: true
 
   phpfpm:
-    build: ./docker-laravel-phpfpm
-    image: docker-laravel-phpfpm
+    build: ./laravel-phpfpm
+    image: laravel-phpfpm
     volumes_from:
       - data
     links:
@@ -28,8 +28,8 @@ services:
       XDEBUG_IDEKEY: PHPSTORM
 
   web:
-    build: ./docker-laravel-nginx
-    image: docker-laravel-nginx
+    build: ./laravel-nginx
+    image: laravel-nginx
     volumes_from:
       - data
     links:
@@ -42,8 +42,8 @@ services:
       - phpfpm
 
   composer:
-    build: ./docker-laravel-composer
-    image: docker-laravel-composer
+    build: ./laravel-composer
+    image: laravel-composer
     volumes_from:
       - data
 
@@ -52,8 +52,8 @@ services:
     image: docker-phpcli
 
   artisan:
-    build: ./docker-laravel-artisan
-    image: docker-laravel-artisan
+    build: ./laravel-artisan
+    image: laravel-artisan
     volumes_from:
       - data
     links:
@@ -62,14 +62,14 @@ services:
       - phpcli
 
   bower:
-    build: ./docker-laravel-bower
-    image: docker-laravel-bower
+    build: ./laravel-bower
+    image: laravel-bower
     volumes_from:
       - data
 
   phpunit:
-    build: ./docker-laravel-phpunit
-    image: docker-laravel-phpunit
+    build: ./laravel-phpunit
+    image: laravel-phpunit
     volumes_from:
       - data
     depends_on:

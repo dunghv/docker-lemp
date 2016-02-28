@@ -1,4 +1,4 @@
-FROM docker-phpcli:latest
+FROM laravel-phpcli:latest
 
 MAINTAINER "Hoang Viet Dung" <dung.hvd@gmail.com>
 

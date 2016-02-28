@@ -1,4 +1,4 @@
-# docker-laravel-env
+# laravel-env
 All the "core" processes (e.g. Nginx, PHP-FPM, etc.) and "development" processes (e.g. composer, artisan etc.) each had their own container. 
 
 ## how to run
