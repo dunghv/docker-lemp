@@ -44,7 +44,7 @@ services:
       - data
 
   phpcli:
-    image: dunghv/docker-phpcli
+    image: dunghv/laravel-phpcli
 
   artisan:
     image: dunghv/laravel-artisan
