@@ -1,0 +1,57 @@
+version: "2"
+services:
+  mysql:
+    build:
+      context: docker/mariadb
+    container_name: app-mysql
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    ports:
+      - 3306:3306
+
+  php:
+    build:
+      context: docker/php
+    container_name: app-php
+    volumes:
+      - .:/var/www/
+    depends_on:
+      - mysql
+    ports:
+      - 9000:9000 # xdebug
+    environment:
+      PHP_IDE_CONFIG: serverName=app.local
+
+  nginx:
+    build:
+      context: docker/nginx
+    container_name: app-nginx
+    depends_on:
+      - php
+    volumes:
+      - .:/var/www/
+    networks:
+      default:
+        aliases:
+          - app.local
+    ports:
+      - 80:80
+
+#  builder:
+#    build:
+#      context: docker/builder
+#    container_name: app-builder
+
+volumes:
+  mysql:
+    driver: local
+#
+#networks:
+#  default:
+#    external:
+#      name: app
