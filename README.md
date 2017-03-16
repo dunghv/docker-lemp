@@ -32,8 +32,3 @@ All the "core" processes (e.g. nginx, php-fpm, etc.) and "development" processes
 * Some useful command
     
     `bin/run --help`
-    
-### Troubleshooting
- 
-* Need composer ?  
-  https://hub.docker.com/r/composer/composer/
