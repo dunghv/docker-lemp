@@ -7,12 +7,10 @@ print_usage() {
     echo "  run clear containers"
     echo "  run clear images"
     echo "  run clear volume"
-    echo "  run composer <command>"
     echo "  run mysql"
     echo "  run php"
     echo "  run artisan"
-    echo "  run build <major version>.<minor version>-<package revision>"
-    echo "  run artisan"
+    echo "  run composer"
     echo ""
 }
 
@@ -42,12 +40,6 @@ case "$1" in
         clear $2
     ;;
 
-    'composer')
-        docker exec -ti \
-                    app-php \
-                    composer "${@:2}"
-    ;;
-
     'mysql')
         docker exec -ti \
                     app-mysql \
@@ -66,10 +58,8 @@ case "$1" in
                     php artisan "${@:2}"
     ;;
 
-    'build')
-        docker run --name builder -v ${PROJECT_PATH}:/source:rw app_builder:latest make version="${@:2}" env=production
-        docker rm builder
-        echo Build finished
+    'composer')
+        docker-compose run composer "${@:2}"
     ;;
 
     '--help')

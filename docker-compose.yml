@@ -42,10 +42,13 @@ services:
     ports:
       - 80:80
 
-#  builder:
-#    build:
-#      context: docker/builder
-#    container_name: app-builder
+  composer:
+      image: composer/composer
+      depends_on:
+        - mysql
+      volumes_from:
+         - php
+      working_dir: /var/www/
 
 volumes:
   mysql:

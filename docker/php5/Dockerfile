@@ -28,10 +28,6 @@ COPY fpm/php-fpm.conf          /etc/php5/fpm/php-fpm.conf
 COPY fpm/pool.d/www.conf       /etc/php5/fpm/pool.d/www.conf
 COPY mods-available/xdebug.ini /etc/php5/mods-available/xdebug.ini
 
-RUN php -r "readfile('http://getcomposer.org/installer');" > composer-setup.php \
-    && php composer-setup.php --install-dir=/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');"
-
 VOLUME /var/www
 VOLUME /root/.composer
 
