@@ -19,6 +19,12 @@ All the "core" processes (e.g. nginx, php-fpm, etc.) and "development" processes
 
     `context: docker/php7`
 
+3. Put your project php code in root folder.   
+    
+    The document root path is pointed to `/public` by default (as some php frameworks like Laravel, Symphony, Yii...).  
+     
+    You can change it in `docker/nginx/app.conf`
+
 ### Usage
 
 * Start server
