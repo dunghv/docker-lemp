@@ -16,7 +16,7 @@ services:
 
   php:
     build:
-      context: docker/php
+      context: docker/php7
     container_name: app-php
     volumes:
       - .:/var/www/

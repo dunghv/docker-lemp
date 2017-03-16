@@ -9,7 +9,10 @@ print_usage() {
     echo "  run clear volume"
     echo "  run composer <command>"
     echo "  run mysql"
+    echo "  run php"
+    echo "  run artisan"
     echo "  run build <major version>.<minor version>-<package revision>"
+    echo "  run artisan"
     echo ""
 }
 
@@ -34,34 +37,6 @@ clear() {
     esac
 }
 
-seed() {
-    if [ -f ${PROJECT_PATH}/data/db.sql ]
-    then
-        echo "Seeding db"
-        sed -E 's/(www\.)?app.com/app.local/g' ${PROJECT_PATH}/data/db.sql > ${PROJECT_PATH}/data/db1.sql
-        docker exec -i \
-                app-mysql \
-                mysql -udocker -pdocker app < ${PROJECT_PATH}/data/db1.sql
-        rm -rf ${PROJECT_PATH}/data/db1.sql
-    else
-        echo "not found: ${PROJECT_PATH}/data/db.sql"
-    fi
-
-    if [ -f ${PROJECT_PATH}/data/images.tar.gz ]
-    then
-        echo "Adding images"
-        rm -rf ${PROJECT_PATH}/uploads/
-        mkdir ${PROJECT_PATH}/uploads/
-        tar -C ${PROJECT_PATH}/uploads/ -xzf ${PROJECT_PATH}/data/images.tar.gz
-    else
-        echo "not found : ${PROJECT_PATH}/data/images.tar.gz"
-    fi
-
-    echo "Create .env"
-    cp ${PROJECT_PATH}/.env.dev ${PROJECT_PATH}/.env
-    echo "Done"
-}
-
 case "$1" in
     'clear')
         clear $2
@@ -83,6 +58,12 @@ case "$1" in
         docker exec -ti \
                     app-php \
                     php "${@:2}"
+    ;;
+
+    'artisan')
+        docker exec -ti \
+                    app-php \
+                    php artisan "${@:2}"
     ;;
 
     'build')
