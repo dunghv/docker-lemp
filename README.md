@@ -1,9 +1,39 @@
-# laravel-env
-All the "core" processes (e.g. Nginx, PHP-FPM, etc.) and "development" processes (e.g. composer, artisan etc.) each had their own container. 
+Laravel-Docker
+======
+All the "core" processes (e.g. nginx, php-fpm, etc.) and "development" processes (e.g. composer, artisan etc.) each had their own container.
 
-## how to run
- * change your folder in docker-compose.yml
- * `docker-compose up -d`
+### What is included?
 
-## how to stop
-`docker-compose down`
+* [x] php5 (cli & fpm)
+* [x] php7 (cli & fpm)
+* [x] nginx
+* [x] mariadb
+* [ ] redis
+* [ ] mongodb
+
+### Setup
+
+1. Install docker
+
+2. Choose your php version in docker-compose.yml 
+
+    `context: docker/php7`
+
+### Usage
+
+* Start server
+
+    `docker-compose up`
+    
+* Stop server
+
+    `docker-compose down`
+
+* Some useful command
+    
+    `bin/run --help`
+    
+### Troubleshooting
+ 
+* Need composer ?  
+  https://hub.docker.com/r/composer/composer/

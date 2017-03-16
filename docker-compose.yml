@@ -1,68 +1,60 @@
-version: '2'
+version: "2"
 services:
-  db:
-    image: mysql:latest
-    ports:
-      - "3306:3306"
-    privileged: true
-    environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-
-  data:
-    image: dunghv/laravel-data
+  mysql:
+    build:
+      context: docker/mariadb
+    container_name: app-mysql
     volumes:
-      - ~/Code/myapp:/data:rw
-    privileged: true
-
-  phpfpm:
-    image: dunghv/laravel-phpfpm
-    volumes_from:
-      - data
-    links:
-      - db
-    privileged: true
+      - mysql:/var/lib/mysql
     environment:
-      XDEBUG_REMOTE_HOST: 192.168.3.104
-      XDEBUG_IDEKEY: PHPSTORM
-
-  web:
-    image: dunghv/laravel-nginx
-    volumes_from:
-      - data
-    links:
-      - phpfpm
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
     ports:
-      - "80:80"
-    privileged: true
+      - 3306:3306
+
+  php:
+    build:
+      context: docker/php7
+    container_name: app-php
+    volumes:
+      - .:/var/www/
     depends_on:
-      - db
-      - phpfpm
+      - mysql
+    ports:
+      - 9000:9000 # xdebug
+    environment:
+      PHP_IDE_CONFIG: serverName=app.local
+
+  nginx:
+    build:
+      context: docker/nginx
+    container_name: app-nginx
+    depends_on:
+      - php
+    volumes:
+      - .:/var/www/
+    networks:
+      default:
+        aliases:
+          - app.local
+    ports:
+      - 80:80
 
   composer:
-    image: dunghv/laravel-composer
-    volumes_from:
-      - data
+      image: composer/composer
+      depends_on:
+        - mysql
+      volumes_from:
+         - php
+      working_dir: /var/www/
 
-  phpcli:
-    image: dunghv/laravel-phpcli
-
-  artisan:
-    image: dunghv/laravel-artisan
-    volumes_from:
-      - data
-    links:
-      - db
-    depends_on:
-      - phpcli
-
-  bower:
-    image: dunghv/laravel-bower
-    volumes_from:
-      - data
-
-  phpunit:
-    image: dunghv/laravel-phpunit
-    volumes_from:
-      - data
-    depends_on:
-      - phpcli
+volumes:
+  mysql:
+    driver: local
+#
+#networks:
+#  default:
+#    external:
+#      name: app

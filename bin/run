@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+PROJECT_PATH="$(cd "$(dirname "$0")/.."; pwd)"
+
+print_usage() {
+    echo "Usage:"
+    echo "  run clear containers"
+    echo "  run clear images"
+    echo "  run clear volume"
+    echo "  run mysql"
+    echo "  run php"
+    echo "  run artisan"
+    echo "  run composer"
+    echo ""
+}
+
+clear() {
+    docker-compose down
+    case "$1" in
+        'containers')
+            docker rm $(docker ps -a -q)
+        ;;
+
+        'images')
+            docker rmi $(docker images -q)
+        ;;
+
+        'volumes')
+            docker volume rm $(docker volume ls | awk '$2 != "VOLUME" {print $2;}')
+        ;;
+
+        *)
+            print_usage
+        ;;
+    esac
+}
+
+case "$1" in
+    'clear')
+        clear $2
+    ;;
+
+    'mysql')
+        docker exec -ti \
+                    app-mysql \
+                    mysql "${@:2}"
+    ;;
+
+    'php')
+        docker exec -ti \
+                    app-php \
+                    php "${@:2}"
+    ;;
+
+    'artisan')
+        docker exec -ti \
+                    app-php \
+                    php artisan "${@:2}"
+    ;;
+
+    'composer')
+        docker-compose run composer "${@:2}"
+    ;;
+
+    '--help')
+        echo "Run tools from docker containers."
+        echo
+        print_usage
+    ;;
+
+    *)
+        echo "Invalid command: $1"
+        echo
+        print_usage
+        exit 1
+    ;;
+esac
