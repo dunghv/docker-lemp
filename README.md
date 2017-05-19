@@ -2,7 +2,7 @@ Docker-LEMP
 ======
 All the "core" processes (e.g. nginx, php-fpm, etc.) and "development" processes (e.g. composer, artisan etc.) each had their own container.
 
-### What is included?
+### What are included?
 
 * [x] php5 (cli & fpm)
 * [x] php7 (cli & fpm)
